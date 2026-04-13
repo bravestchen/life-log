@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人健康学习记录 - Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航栏 -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-heartbeat"></i> 健康学习记录</h1>
+                <div class="header-actions">
+                    <button id="addRecordBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> 添加记录
+                    </button>
+                    <button id="themeToggle" class="btn-icon" title="切换主题">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 左侧导航 -->
+            <nav class="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-view="dashboard">
+                        <i class="fas fa-home"></i> 今日概览
+                    </li>
+                    <li class="nav-item" data-view="timeline">
+                        <i class="fas fa-stream"></i> 时间轴
+                    </li>
+                    <li class="nav-item" data-view="learning">
+                        <i class="fas fa-book"></i> 学习记录
+                    </li>
+                    <li class="nav-item" data-view="health">
+                        <i class="fas fa-running"></i> 健康记录
+                    </li>
+                    <li class="nav-item" data-view="stats">
+                        <i class="fas fa-chart-bar"></i> 数据统计
+                    </li>
+                    <li class="nav-item" data-view="settings">
+                        <i class="fas fa-cog"></i> 设置
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <!-- 今日概览 -->
+                <div id="dashboardView" class="view active">
+                    <div class="today-overview">
+                        <h2><i class="fas fa-calendar-day"></i> 今日概览</h2>
+                        <div class="overview-cards">
+                            <div class="card">
+                                <h3>连续记录</h3>
+                                <p class="big-number" id="streakDays">0</p>
+                                <p>天</p>
+                            </div>
+                            <div class="card">
+                                <h3>今日学习</h3>
+                                <p class="big-number" id="todayLearning">0</p>
+                                <p>分钟</p>
+                            </div>
+                            <div class="card">
+                                <h3>今日运动</h3>
+                                <p class="big-number" id="todayExercise">0</p>
+                                <p>分钟</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <h2><i class="fas fa-bolt"></i> 快速记录</h2>
+                        <div class="action-buttons">
+                            <button class="action-btn learning-btn" data-type="learning">
+                                <i class="fas fa-book"></i>
+                                <span>学习记录</span>
+                            </button>
+                            <button class="action-btn health-btn" data-type="health">
+                                <i class="fas fa-running"></i>
+                                <span>运动记录</span>
+                            </button>
+                            <button class="action-btn health-btn" data-type="body">
+                                <i class="fas fa-weight"></i>
+                                <span>身体数据</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="recent-records">
+                        <h2><i class="fas fa-history"></i> 最近记录</h2>
+                        <div id="recentRecordsList" class="records-list">
+                            <!-- 最近记录会动态加载到这里 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 时间轴视图 -->
+                <div id="timelineView" class="view">
+                    <h2><i class="fas fa-stream"></i> 时间轴</h2>
+                    <div class="filter-options">
+                        <button class="filter-btn active" data-filter="all">全部</button>
+                        <button class="filter-btn" data-filter="learning">学习</button>
+                        <button class="filter-btn" data-filter="health">健康</button>
+                    </div>
+                    <div id="timelineList" class="timeline">
+                        <!-- 时间轴记录会动态加载到这里 -->
+                    </div>
+                </div>
+
+                <!-- 学习记录视图 -->
+                <div id="learningView" class="view">
+                    <h2><i class="fas fa-book"></i> 学习记录</h2>
+                    <div class="records-container">
+                        <div id="learningRecordsList" class="records-list">
+                            <!-- 学习记录会动态加载到这里 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 健康记录视图 -->
+                <div id="healthView" class="view">
+                    <h2><i class="fas fa-running"></i> 健康记录</h2>
+                    <div class="records-container">
+                        <div id="healthRecordsList" class="records-list">
+                            <!-- 健康记录会动态加载到这里 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据统计视图 -->
+                <div id="statsView" class="view">
+                    <h2><i class="fas fa-chart-bar"></i> 数据统计</h2>
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <h3>本周数据</h3>
+                            <canvas id="weekChart" width="300" height="200"></canvas>
+                        </div>
+                        <div class="stat-card">
+                            <h3>学习类型分布</h3>
+                            <canvas id="learningTypeChart" width="300" height="200"></canvas>
+                        </div>
+                        <div class="stat-card">
+                            <h3>运动类型分布</h3>
+                            <canvas id="exerciseTypeChart" width="300" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设置视图 -->
+                <div id="settingsView" class="view">
+                    <h2><i class="fas fa-cog"></i> 设置</h2>
+                    <div class="settings-container">
+                        <div class="setting-group">
+                            <h3>数据管理</h3>
+                            <button id="exportDataBtn" class="btn-secondary">
+                                <i class="fas fa-download"></i> 导出数据
+                            </button>
+                            <button id="importDataBtn" class="btn-secondary">
+                                <i class="fas fa-upload"></i> 导入数据
+                            </button>
+                            <button id="clearDataBtn" class="btn-danger">
+                                <i class="fas fa-trash"></i> 清除所有数据
+                            </button>
+                        </div>
+                        <div class="setting-group">
+                            <h3>关于</h3>
+                            <p>这是一个个人健康学习记录的演示应用。</p>
+                            <p>数据存储在浏览器本地，不会上传到服务器。</p>
+                            <p>版本: 1.0.0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 添加记录模态框 -->
+    <div id="addRecordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加记录</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="recordForm">
+                    <div class="form-group">
+                        <label for="recordType">记录类型</label>
+                        <select id="recordType" required>
+                            <option value="">选择类型</option>
+                            <option value="learning">学习记录</option>
+                            <option value="exercise">运动记录</option>
+                            <option value="body">身体数据</option>
+                        </select>
+                    </div>
+
+                    <!-- 学习记录字段 -->
+                    <div id="learningFields" class="type-fields">
+                        <div class="form-group">
+                            <label for="learningTitle">标题</label>
+                            <input type="text" id="learningTitle" placeholder="例如：阅读《深度工作》">
+                        </div>
+                        <div class="form-group">
+                            <label for="learningType">学习类型</label>
+                            <select id="learningType">
+                                <option value="reading">阅读</option>
+                                <option value="course">在线课程</option>
+                                <option value="practice">技能练习</option>
+                                <option value="certificate">考证</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="learningDuration">学习时长 (分钟)</label>
+                            <input type="number" id="learningDuration" min="1" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="learningNotes">心得笔记</label>
+                            <textarea id="learningNotes" rows="3" placeholder="记录你的学习心得..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 运动记录字段 -->
+                    <div id="exerciseFields" class="type-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="exerciseType">运动类型</label>
+                            <select id="exerciseType">
+                                <option value="running">跑步</option>
+                                <option value="yoga">瑜伽</option>
+                                <option value="gym">健身房</option>
+                                <option value="walking">散步</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exerciseDuration">运动时长 (分钟)</label>
+                            <input type="number" id="exerciseDuration" min="1" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="exerciseIntensity">强度感受</label>
+                            <div class="rating">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star active" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exerciseNotes">备注</label>
+                            <textarea id="exerciseNotes" rows="2" placeholder="记录运动感受..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 身体数据字段 -->
+                    <div id="bodyFields" class="type-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="bodyWeight">体重 (kg)</label>
+                            <input type="number" id="bodyWeight" step="0.1" placeholder="例如：65.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="bodySleep">睡眠时长 (小时)</label>
+                            <input type="number" id="bodySleep" step="0.1" placeholder="例如：7.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="bodySteps">步数</label>
+                            <input type="number" id="bodySteps" placeholder="例如：10000">
+                        </div>
+                        <div class="form-group">
+                            <label for="bodyNotes">备注</label>
+                            <textarea id="bodyNotes" rows="2" placeholder="记录身体状况..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>记录时间</label>
+                        <input type="datetime-local" id="recordDate" value="">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary close-modal">取消</button>
+                        <button type="submit" class="btn-primary">保存记录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 记录详情模态框 -->
+    <div id="recordDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="detailTitle">记录详情</h3>
+                <button class="close-detail-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="detailContent">
+                    <!-- 详情内容会动态加载到这里 -->
+                </div>
+                <div class="detail-actions">
+                    <button id="deleteRecordBtn" class="btn-danger">
+                        <i class="fas fa-trash"></i> 删除记录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入导出模态框 -->
+    <div id="dataModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="dataModalTitle">数据管理</h3>
+                <button class="close-data-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="dataModalContent">
+                    <!-- 数据管理内容会动态加载到这里 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

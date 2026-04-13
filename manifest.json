@@ -1,0 +1,20 @@
+{
+  "name": "个人健康学习记录",
+  "short_name": "健康学习记录",
+  "description": "记录个人健康与学习轨迹的应用程序",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["health", "education", "productivity"],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}
